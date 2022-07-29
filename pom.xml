@@ -10,8 +10,10 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-		<module>consumer</module>
-		<module>producer</module>
+		<module>core</module>
+		<module>consumer-butchery</module>
+		<module>consumer-market</module>
+		<module>producer-distributor</module>
 	</modules>
 	<groupId>com.kafka</groupId>
 	<artifactId>unicorn</artifactId>
@@ -51,22 +53,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>
