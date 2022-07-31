@@ -17,7 +17,7 @@ public class UnicornController {
     private final String topic;
 
     public UnicornController(KafkaTemplate<String, Unicorn> unicornKafkaTemplate,
-         @Value("${kafka.topic.name}") String topic) {
+            @Value("${kafka.distributor.topic.name}") String topic) {
 
         this.unicornKafkaTemplate = unicornKafkaTemplate;
         this.topic = topic;
@@ -28,15 +28,8 @@ public class UnicornController {
         log.info("Unicorn ready to sousaguation, publishing...");
         unicornKafkaTemplate.send(topic, unicorn)
                 .completable()
-                .thenRun(() -> log.info("Unicorn successfully published {}", unicorn));
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/publish/bad/unicorn/")
-    public ResponseEntity<?> publishUnicorn() {
-        log.info("Unicorn ready to sousaguation, publishing...");
-        unicornKafkaTemplate.send(topic, new Unicorn("Ms. Duddle", (short) 1));
+                .thenRun(() -> log.info("Unicorn successfully distributed to rainbow: name {}, weight: {} gm",
+                        unicorn.getName(), unicorn.getWeightInGrams()));
 
         return ResponseEntity.ok().build();
     }

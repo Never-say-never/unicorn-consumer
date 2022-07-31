@@ -15,5 +15,7 @@ spring:
     bootstrap-servers: localhost:9092
 
 kafka:
-  topic:
+  distributor.topic:
     name: rainbow
+  delivery.topic:
+    name: candy-shop

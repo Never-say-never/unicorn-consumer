@@ -16,7 +16,7 @@ import java.math.RoundingMode;
 
 @Service
 @Slf4j
-@KafkaListener(topics = "${kafka.topic.name}")
+@KafkaListener(topics = "${kafka.distributor.topic.name}")
 public class UnicornListener {
 
     private final KafkaTemplate<String, Meet> kafkaTemplate;
@@ -24,17 +24,20 @@ public class UnicornListener {
     private final SausageService sausageService;
     private final SlaughteringService slaughteringService;
     private final String topic;
+    private final String deliveryTopic;
 
     public UnicornListener(KafkaTemplate<String, Meet> kafkaTemplate,
            KafkaTemplate<String, Sausage> sausageKafkaTemplate,
            SausageService sausageService,
            SlaughteringService slaughteringService,
-           @Value("${kafka.topic.name}") String topic) {
+           @Value("${kafka.distributor.topic.name}") String topic,
+           @Value("${kafka.delivery.topic.name}") String deliveryTopic) {
         this.sausageKafkaTemplate = sausageKafkaTemplate;
         this.kafkaTemplate = kafkaTemplate;
         this.sausageService = sausageService;
         this.slaughteringService = slaughteringService;
         this.topic = topic;
+        this.deliveryTopic = deliveryTopic;
     }
 
     @KafkaHandler
@@ -51,7 +54,7 @@ public class UnicornListener {
                 meet.getUnicornId(), meet.getWeightInGrams(),
                 meet.getPrice().setScale(2, RoundingMode.CEILING));
 
-        sausageKafkaTemplate.send(topic, sausageService.execute(meet));
+        sausageKafkaTemplate.send(deliveryTopic, sausageService.execute(meet));
     }
 
     @KafkaHandler(isDefault = true)

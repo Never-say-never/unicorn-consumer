@@ -13,13 +13,13 @@
 		<module>core</module>
 		<module>consumer-butchery</module>
 		<module>consumer-market</module>
-		<module>producer-distributor</module>
+		<module>unicorn-distributor</module>
 	</modules>
 	<groupId>com.kafka</groupId>
 	<artifactId>unicorn</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>unicorn</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Demo project for unicorn usage only</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
