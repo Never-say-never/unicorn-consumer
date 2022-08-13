@@ -1,37 +1,37 @@
 package com.kafka.unicorn.service;
 
+import com.kafka.core.domain.Meat;
 import com.kafka.core.domain.Unicorn;
-import com.kafka.core.domain.Meet;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
 
 @Service
-public class SlaughteringService implements ButcheryService<Unicorn, Meet> {
+public class SlaughteringService implements ButcheryService<Unicorn, Meat> {
 
-    public static final double MEET_PER_KILOGRAM_COEFFICIENT = 4.8;
-    public static final double MEET_PRICE_FOR_ONE_GRAM = 6000;
+    public static final double MEAT_PER_KILOGRAM_COEFFICIENT = 4.8;
+    public static final double MEAT_PRICE_FOR_ONE_GRAM = 6000;
 
     public static String unicornId(Unicorn unicorn) {
         return DigestUtils.md5DigestAsHex(unicorn.getName().getBytes());
     }
 
-    public Meet execute(Unicorn unicorn) {
-        final long meetAmountInGrams = calculateMeetWeightInGrams(unicorn);
+    public Meat execute(Unicorn unicorn) {
+        final long meatAmountInGrams = calculateMeatWeightInGrams(unicorn);
 
-        return Meet.builder()
+        return Meat.builder()
                 .unicornId(unicornId(unicorn))
-                .weightInGrams(meetAmountInGrams)
-                .price(calculateTotalPrice(meetAmountInGrams))
+                .weightInGrams(meatAmountInGrams)
+                .price(calculateTotalPrice(meatAmountInGrams))
                 .build();
     }
 
-    private BigDecimal calculateTotalPrice(long meetAmountInGrams) {
-        return BigDecimal.valueOf(meetAmountInGrams * MEET_PRICE_FOR_ONE_GRAM);
+    private BigDecimal calculateTotalPrice(long meatAmountInGrams) {
+        return BigDecimal.valueOf(meatAmountInGrams * MEAT_PRICE_FOR_ONE_GRAM);
     }
 
-    private long calculateMeetWeightInGrams(Unicorn unicorn) {
-        return Math.round(unicorn.getWeightInGrams() / MEET_PER_KILOGRAM_COEFFICIENT);
+    private long calculateMeatWeightInGrams(Unicorn unicorn) {
+        return Math.round(unicorn.getWeightInGrams() / MEAT_PER_KILOGRAM_COEFFICIENT);
     }
 }

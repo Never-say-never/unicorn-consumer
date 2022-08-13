@@ -28,7 +28,7 @@ public class UnicornController {
         log.info("Unicorn ready to sousaguation, publishing...");
         unicornKafkaTemplate.send(topic, unicorn)
                 .completable()
-                .thenRun(() -> log.info("Unicorn successfully distributed to rainbow: name {}, weight: {} gm",
+                .thenRun(() -> log.info("Unicorn, name: '{}', successfully distributed to rainbow, weight: {} gm",
                         unicorn.getName(), unicorn.getWeightInGrams()));
 
         return ResponseEntity.ok().build();

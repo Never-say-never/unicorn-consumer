@@ -1,8 +1,8 @@
 package com.kafka.unicorn.consumer;
 
+import com.kafka.core.domain.Meat;
 import com.kafka.unicorn.service.SausageService;
 import com.kafka.core.domain.Unicorn;
-import com.kafka.core.domain.Meet;
 import com.kafka.core.domain.Sausage;
 import com.kafka.unicorn.service.SlaughteringService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,14 @@ import java.math.RoundingMode;
 @KafkaListener(topics = "${kafka.distributor.topic.name}")
 public class UnicornListener {
 
-    private final KafkaTemplate<String, Meet> kafkaTemplate;
+    private final KafkaTemplate<String, Meat> kafkaTemplate;
     private final KafkaTemplate<String, Sausage> sausageKafkaTemplate;
     private final SausageService sausageService;
     private final SlaughteringService slaughteringService;
     private final String topic;
     private final String deliveryTopic;
 
-    public UnicornListener(KafkaTemplate<String, Meet> kafkaTemplate,
+    public UnicornListener(KafkaTemplate<String, Meat> kafkaTemplate,
            KafkaTemplate<String, Sausage> sausageKafkaTemplate,
            SausageService sausageService,
            SlaughteringService slaughteringService,
@@ -42,19 +42,26 @@ public class UnicornListener {
 
     @KafkaHandler
     public void listenOnUnicornReady(Unicorn unicorn) {
-        log.info("Unicorn: {}, weigh: {} - unicorn dismantling",
-                unicorn.getName(), unicorn.getWeightInGrams());
+        log.info("Unicorn: {}, weigh: {} - ready to dismantling", unicorn.getName(), unicorn.getWeightInGrams());
+        Meat meat = slaughteringService.execute(unicorn);
+        log.info("Unicorn ID '{}' has been successfully dismantled, meat weigh: {} gm",
+                meat.getUnicornId(), meat.getWeightInGrams());
 
-        kafkaTemplate.send(topic, slaughteringService.execute(unicorn));
+        kafkaTemplate.send(topic, meat);
     }
 
     @KafkaHandler
-    public void listenOnUnicornMeetReady(Meet meet) {
-        log.info("ID: {}, weigh:{}, price:{} - unicorn sousaguation",
-                meet.getUnicornId(), meet.getWeightInGrams(),
-                meet.getPrice().setScale(2, RoundingMode.CEILING));
+    public void listenOnUnicornMeatReady(Meat meat) {
+        log.info("Unicorn ID: {}, meat weigh:{}, price:{} - ready to sausaguation",
+                meat.getUnicornId(), meat.getWeightInGrams(),
+                meat.getPrice().setScale(2, RoundingMode.CEILING));
 
-        sausageKafkaTemplate.send(deliveryTopic, sausageService.execute(meet));
+        Sausage sausage = sausageService.execute(meat);
+        log.info("Unicorn ID: {}, has been successfully sausaguated, sausages {}, sausages weigh {} gm, price {}",
+                sausage.getUnicornId(), sausage.getAmount(), sausage.getWeightInGrams(),
+                sausage.getPrice().setScale(2, RoundingMode.CEILING));
+
+        sausageKafkaTemplate.send(deliveryTopic, sausage);
     }
 
     @KafkaHandler(isDefault = true)

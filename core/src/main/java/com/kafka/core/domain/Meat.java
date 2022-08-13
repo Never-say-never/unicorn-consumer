@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Meet {
+public class Meat {
     private String unicornId;
     private long weightInGrams;
     private BigDecimal price;

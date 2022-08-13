@@ -13,9 +13,6 @@ import java.math.RoundingMode;
 @KafkaListener(topics = "${kafka.delivery.topic.name}")
 public class UnicornListener {
 
-    public UnicornListener() {
-    }
-
     @KafkaHandler
     public void listenOnUnicornSausageReady(Sausage unicorn) {
         log.info("ID: {}, grams: {}, price: {} - sausage delivered to the candy-shop",

@@ -14,6 +14,6 @@ import java.math.BigDecimal;
 public class Sausage {
     private String unicornId;
     private long weightInGrams;
-    private int amount;
+    private long amount;
     private BigDecimal price;
 }
