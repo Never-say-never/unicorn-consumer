@@ -10,9 +10,9 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-		<module>core</module>
-		<module>consumer-butchery</module>
-		<module>consumer-market</module>
+		<module>unicore</module>
+		<module>unicorn-butchery</module>
+		<module>unicorn-market</module>
 		<module>unicorn-distributor</module>
 	</modules>
 	<groupId>com.kafka</groupId>
